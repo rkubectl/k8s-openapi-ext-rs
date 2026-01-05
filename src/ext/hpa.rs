@@ -27,9 +27,9 @@ pub trait HorizontalPodAutoscalerExt: super::ResourceBuilder + Sized {
 }
 
 impl HorizontalPodAutoscalerExt for autoscalingv2::HorizontalPodAutoscaler {
-    fn new<T: ScaleTargetRef>(name: impl ToString, scale_target_ref: &T) -> Self {
+    fn new<T: ScaleTargetRef>(name: impl ToString, scale_target: &T) -> Self {
         let metadata = metadata(name);
-        let scale_target_ref = scale_target_ref.scale_target_ref();
+        let scale_target_ref = scale_target.scale_target_ref();
         let spec = autoscalingv2::HorizontalPodAutoscalerSpec {
             scale_target_ref,
             // behavior: todo!(),
@@ -50,10 +50,10 @@ impl HorizontalPodAutoscalerExt for autoscalingv2::HorizontalPodAutoscaler {
     fn with_max_replicas<T: ScaleTargetRef>(
         name: impl ToString,
         max_replicas: i32,
-        scale_target_ref: &T,
+        scale_target: &T,
     ) -> Self {
         let metadata = metadata(name);
-        let scale_target_ref = scale_target_ref.scale_target_ref();
+        let scale_target_ref = scale_target.scale_target_ref();
         let spec = autoscalingv2::HorizontalPodAutoscalerSpec {
             max_replicas,
             scale_target_ref,
@@ -126,6 +126,20 @@ pub trait ScaleTargetRef: openapi::Metadata<Ty = metav1::ObjectMeta> {
 }
 
 impl ScaleTargetRef for appsv1::Deployment {
+    fn scale_target_ref(&self) -> autoscalingv2::CrossVersionObjectReference {
+        let api_version = openapi::api_version(self).to_string();
+        let kind = openapi::kind(self).to_string();
+        let name = self.metadata().name.clone().unwrap_or_default();
+
+        autoscalingv2::CrossVersionObjectReference {
+            api_version: Some(api_version),
+            kind,
+            name,
+        }
+    }
+}
+
+impl ScaleTargetRef for appsv1::StatefulSet {
     fn scale_target_ref(&self) -> autoscalingv2::CrossVersionObjectReference {
         let api_version = openapi::api_version(self).to_string();
         let kind = openapi::kind(self).to_string();
