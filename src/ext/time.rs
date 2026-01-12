@@ -1,22 +1,20 @@
 use super::*;
 
-pub trait TimeExt {
+pub trait TimeExt: Sized {
     fn now() -> Self;
 
     fn to_system_time(&self) -> std::time::SystemTime;
 
-    fn from_system_time(time: std::time::SystemTime) -> Self;
+    fn try_from_system_time(time: std::time::SystemTime) -> Result<Self, jiff::Error>;
 
     #[cfg(feature = "time")]
     fn to_utc_date_time(&self) -> ::time::UtcDateTime;
 
     #[cfg(feature = "time")]
-    fn from_utc_date_time(time: ::time::UtcDateTime) -> Self;
+    fn try_from_utc_date_time(time: ::time::UtcDateTime) -> Result<Self, jiff::Error>;
 
-    #[cfg(feature = "jiff")]
     fn from_zoned(time: jiff::Zoned) -> Self;
 
-    #[cfg(feature = "jiff")]
     fn try_to_zoned(&self) -> Result<jiff::Zoned, jiff::Error> {
         let system_time = self.to_system_time();
         jiff::Zoned::try_from(system_time)
@@ -25,20 +23,19 @@ pub trait TimeExt {
 
 impl TimeExt for metav1::Time {
     fn now() -> Self {
-        Self(openapi::chrono::Utc::now())
+        Self(jiff::Timestamp::now())
     }
 
     fn to_system_time(&self) -> std::time::SystemTime {
         self.0.into()
     }
 
-    fn from_system_time(time: std::time::SystemTime) -> Self {
-        Self(time.into())
+    fn try_from_system_time(time: std::time::SystemTime) -> Result<Self, jiff::Error> {
+        time.try_into().map(Self)
     }
 
-    #[cfg(feature = "jiff")]
     fn from_zoned(time: jiff::Zoned) -> Self {
-        Self::from_system_time(time.into())
+        Self(time.into())
     }
 
     #[cfg(feature = "time")]
@@ -47,7 +44,7 @@ impl TimeExt for metav1::Time {
     }
 
     #[cfg(feature = "time")]
-    fn from_utc_date_time(time: ::time::UtcDateTime) -> Self {
-        Self::from_system_time(time.into())
+    fn try_from_utc_date_time(time: ::time::UtcDateTime) -> Result<Self, jiff::Error> {
+        Self::try_from_system_time(time.into())
     }
 }
