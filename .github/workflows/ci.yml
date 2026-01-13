@@ -28,7 +28,7 @@ jobs:
 
       - name: cargo test
         run: |
-            cargo test
+            cargo test --features k8s-openapi/latest
 
       - name: Run cargo fmt --check
         run: cargo fmt --check
