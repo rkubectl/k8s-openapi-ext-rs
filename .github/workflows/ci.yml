@@ -34,5 +34,5 @@ jobs:
         run: cargo fmt --check
 
       - name: Run clippy
-        run: cargo clippy --features k8s-openapi/latest -- --deny warnings
+        run: cargo clippy --all-targets --features k8s-openapi/latest -- --deny warnings
 
