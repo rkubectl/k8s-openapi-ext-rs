@@ -1,0 +1,41 @@
+name: test
+on:
+  pull_request:
+
+env:
+  RUST_BACKTRACE: 1
+
+# Spend CI time only on latest ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    strategy:
+      # Prevent GitHub from cancelling all in-progress jobs when a matrix job fails.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: ripgrep
+      # Smart caching for Rust projects.
+      # Includes workaround for macos cache corruption.
+      # - https://github.com/rust-lang/cargo/issues/8603
+      # - https://github.com/actions/cache/issues/403
+      - uses: Swatinem/rust-cache@v2
+
+      # Real CI work starts here
+      - name: Build workspace
+        run: cargo build --workspace --features=k8s-openapi/latest
+
+      # Workspace unit tests with various feature sets
+      - name: Run workspace unit tests (k8s-openapi/latest)
+        run: cargo test --workspace --features=k8s-openapi/latest
+      - name: Run workspace unit tests (k8s-openapi/earliest)
+        run: cargo test --workspace --features=k8s-openapi/earliest
