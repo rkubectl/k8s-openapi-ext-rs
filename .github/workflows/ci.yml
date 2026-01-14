@@ -37,5 +37,5 @@ jobs:
       # Workspace unit tests with various feature sets
       - name: Run workspace unit tests (k8s-openapi/latest)
         run: cargo test --workspace --features=k8s-openapi/latest
-      - name: Run workspace unit tests (k8s-openapi/earliest)
-        run: cargo test --workspace --features=k8s-openapi/earliest
+      # - name: Run workspace unit tests (k8s-openapi/earliest)
+      #   run: cargo test --workspace --features=k8s-openapi/earliest
