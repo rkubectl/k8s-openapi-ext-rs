@@ -6,6 +6,7 @@ rust-version = "1.88.0"
 description = "Collection of fluent builder traits for Kubernetes objects"
 repository = "https://github.com/rkubectl/k8s-openapi-ext-rs"
 license = "Apache-2.0"
+readme = "README.md"
 
 
 [dependencies]
