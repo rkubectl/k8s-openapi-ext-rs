@@ -350,3 +350,287 @@ impl PodSpecExt for corev1::PodSpec {
         self
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_spec() -> corev1::PodSpec {
+        corev1::PodSpec::container(corev1::Container::new("test-container"))
+    }
+
+    #[test]
+    fn container() {
+        let container = corev1::Container::new("test-container");
+        let pod_spec = corev1::PodSpec::container(container);
+        assert_eq!(pod_spec.containers.len(), 1);
+        assert_eq!(pod_spec.containers[0].name, "test-container");
+    }
+
+    #[test]
+    fn containers() {
+        let containers_vec = vec![
+            corev1::Container::new("container1"),
+            corev1::Container::new("container2"),
+        ];
+        let pod_spec = corev1::PodSpec::containers(containers_vec);
+        assert_eq!(pod_spec.containers.len(), 2);
+        assert_eq!(pod_spec.containers[0].name, "container1");
+        assert_eq!(pod_spec.containers[1].name, "container2");
+    }
+
+    #[test]
+    fn active_deadline_seconds() {
+        let pod_spec = test_spec().active_deadline_seconds(300);
+        assert_eq!(pod_spec.active_deadline_seconds, Some(300));
+    }
+
+    #[test]
+    fn affinity() {
+        let affinity = corev1::Affinity::default();
+        let pod_spec = test_spec().affinity(affinity);
+        assert!(pod_spec.affinity.is_some());
+
+        let pod_spec_none = test_spec().affinity(None);
+        assert!(pod_spec_none.affinity.is_none());
+    }
+
+    #[test]
+    fn automount_service_account_token() {
+        let pod_spec = test_spec().automount_service_account_token(true);
+        assert_eq!(pod_spec.automount_service_account_token, Some(true));
+
+        let pod_spec_false = test_spec().automount_service_account_token(false);
+        assert_eq!(pod_spec_false.automount_service_account_token, Some(false));
+    }
+
+    #[test]
+    fn dns_policy() {
+        let pod_spec = test_spec().dns_policy("ClusterFirst");
+        assert_eq!(pod_spec.dns_policy.unwrap(), "ClusterFirst");
+    }
+
+    #[test]
+    fn enable_service_links() {
+        let pod_spec = test_spec().enable_service_links(false);
+        assert_eq!(pod_spec.enable_service_links, Some(false));
+
+        let pod_spec_true = test_spec().enable_service_links(true);
+        assert_eq!(pod_spec_true.enable_service_links, Some(true));
+    }
+
+    #[test]
+    fn hostname() {
+        let pod_spec = test_spec().hostname("my-pod");
+        assert_eq!(pod_spec.hostname.unwrap(), "my-pod");
+    }
+
+    #[test]
+    fn host_ipc() {
+        let pod_spec = test_spec().host_ipc(true);
+        assert_eq!(pod_spec.host_ipc, Some(true));
+    }
+
+    #[test]
+    fn host_network() {
+        let pod_spec = test_spec().host_network(true);
+        assert_eq!(pod_spec.host_network, Some(true));
+    }
+
+    #[test]
+    fn host_pid() {
+        let pod_spec = test_spec().host_pid(true);
+        assert_eq!(pod_spec.host_pid, Some(true));
+    }
+
+    #[test]
+    fn image_pull_secret() {
+        let pod_spec = test_spec()
+            .image_pull_secret("secret1")
+            .image_pull_secret("secret2");
+
+        let secrets = pod_spec.image_pull_secrets.unwrap_or_default();
+        assert_eq!(secrets.len(), 2);
+        // LocalObjectReference.name field is String
+        assert_eq!(secrets[0].name, "secret1");
+        assert_eq!(secrets[1].name, "secret2");
+    }
+
+    #[test]
+    fn node_name() {
+        let pod_spec = test_spec().node_name("worker-node-1");
+        assert_eq!(pod_spec.node_name.unwrap(), "worker-node-1");
+    }
+
+    #[test]
+    fn node_selector() {
+        let pod = corev1::Pod::default().spec(
+            test_spec().node_selector([("kubernetes.io/os", "linux"), ("node-type", "compute")]),
+        );
+
+        let node_selector = pod.node_selector().unwrap();
+        assert_eq!(node_selector.len(), 2);
+        assert_eq!(node_selector.get("kubernetes.io/os").unwrap(), "linux");
+        assert_eq!(node_selector.get("node-type").unwrap(), "compute");
+    }
+
+    #[test]
+    fn preemption_policy() {
+        let pod_spec = test_spec().preemption_policy("Never");
+        assert_eq!(pod_spec.preemption_policy.unwrap(), "Never");
+    }
+
+    #[test]
+    fn priority() {
+        let pod_spec = test_spec().priority(100);
+        assert_eq!(pod_spec.priority, Some(100));
+    }
+
+    #[test]
+    fn priority_class_name() {
+        let pod_spec = test_spec().priority_class_name("high-priority");
+        assert_eq!(pod_spec.priority_class_name.unwrap(), "high-priority");
+    }
+
+    #[test]
+    fn restart_policy() {
+        let pod_spec = test_spec().restart_policy("OnFailure");
+        assert_eq!(pod_spec.restart_policy.unwrap(), "OnFailure");
+    }
+
+    #[test]
+    fn runtime_class_name() {
+        let pod_spec = test_spec().runtime_class_name("gvisor");
+        assert_eq!(pod_spec.runtime_class_name.unwrap(), "gvisor");
+    }
+
+    #[test]
+    fn scheduler_name() {
+        let pod_spec = test_spec().scheduler_name("custom-scheduler");
+        assert_eq!(pod_spec.scheduler_name.unwrap(), "custom-scheduler");
+    }
+
+    #[test]
+    fn service_account_name() {
+        let pod_spec = test_spec().service_account_name("my-service-account");
+        assert_eq!(pod_spec.service_account_name.unwrap(), "my-service-account");
+    }
+
+    #[test]
+    #[expect(deprecated)]
+    fn service_account_deprecated() {
+        let pod_spec = test_spec().service_account("deprecated-account");
+        assert_eq!(pod_spec.service_account.unwrap(), "deprecated-account");
+    }
+
+    #[test]
+    fn set_hostname_as_fqdn() {
+        let pod_spec = test_spec().set_hostname_as_fqdn(true);
+        assert_eq!(pod_spec.set_hostname_as_fqdn, Some(true));
+    }
+
+    #[test]
+    fn share_process_namespace() {
+        let pod_spec = test_spec().share_process_namespace(true);
+        assert_eq!(pod_spec.share_process_namespace, Some(true));
+    }
+
+    #[test]
+    fn subdomain() {
+        let pod_spec = test_spec().subdomain("my-subdomain");
+        assert_eq!(pod_spec.subdomain.unwrap(), "my-subdomain");
+    }
+
+    #[test]
+    fn termination_grace_period_seconds() {
+        let pod_spec = test_spec().termination_grace_period_seconds(60);
+        assert_eq!(pod_spec.termination_grace_period_seconds, Some(60));
+    }
+
+    #[test]
+    fn tolerations() {
+        let toleration1 =
+            corev1::Toleration::no_schedule("node-role.kubernetes.io/master").exists();
+        let toleration2 = corev1::Toleration::no_execute("node.kubernetes.io/not-ready")
+            .exists()
+            .toleration_seconds(300);
+
+        let pod = corev1::Pod::default().spec(test_spec().tolerations([toleration1, toleration2]));
+
+        let tolerations = pod.tolerations().unwrap();
+        assert_eq!(tolerations.len(), 2);
+        let t0 = &tolerations[0];
+        let t1 = &tolerations[1];
+
+        assert_eq!(t0.key.as_ref().unwrap(), "node-role.kubernetes.io/master");
+        assert_eq!(t0.operator.as_ref().unwrap(), "Exists");
+        assert_eq!(t0.effect.as_ref().unwrap(), "NoSchedule");
+
+        assert_eq!(t1.key.as_ref().unwrap(), "node.kubernetes.io/not-ready");
+        assert_eq!(t1.operator.as_ref().unwrap(), "Exists");
+        assert_eq!(t1.effect.as_ref().unwrap(), "NoExecute");
+        assert_eq!(t1.toleration_seconds, Some(300));
+    }
+
+    #[test]
+    fn volumes() {
+        let volume1 = corev1::Volume {
+            name: "config-vol".to_string(),
+            config_map: Some(corev1::ConfigMapVolumeSource {
+                name: "my-config".to_string(),
+                ..default()
+            }),
+            ..default()
+        };
+        let volume2 = corev1::Volume {
+            name: "empty-vol".to_string(),
+            empty_dir: Some(corev1::EmptyDirVolumeSource::default()),
+            ..default()
+        };
+
+        let pod_spec = test_spec().volumes([volume1, volume2]);
+
+        let volumes = pod_spec.volumes.as_ref().unwrap();
+        assert_eq!(volumes.len(), 2);
+        assert_eq!(volumes[0].name, "config-vol");
+        assert_eq!(volumes[1].name, "empty-vol");
+        assert!(volumes[0].config_map.is_some());
+        assert!(volumes[1].empty_dir.is_some());
+    }
+
+    #[test]
+    fn method_chaining() {
+        let container = corev1::Container::new("test-container");
+
+        let pod_spec = corev1::PodSpec::container(container)
+            .hostname("my-pod")
+            .host_network(true)
+            .dns_policy("ClusterFirst")
+            .restart_policy("Always")
+            .priority(100)
+            .service_account_name("my-sa")
+            .image_pull_secret("my-secret")
+            .node_selector([("zone", "us-west-2a")])
+            .termination_grace_period_seconds(30);
+
+        assert_eq!(pod_spec.containers.len(), 1);
+        assert_eq!(pod_spec.hostname.as_ref().unwrap(), "my-pod");
+        assert_eq!(pod_spec.host_network, Some(true));
+        assert_eq!(pod_spec.dns_policy.as_ref().unwrap(), "ClusterFirst");
+        assert_eq!(pod_spec.restart_policy.as_ref().unwrap(), "Always");
+        assert_eq!(pod_spec.priority, Some(100));
+        assert_eq!(pod_spec.service_account_name.as_ref().unwrap(), "my-sa");
+        assert_eq!(pod_spec.image_pull_secrets.as_ref().unwrap().len(), 1);
+
+        // Use PodGetExt for node_selector - more ergonomic
+        let pod = corev1::Pod::default().spec(pod_spec);
+        assert_eq!(
+            pod.node_selector().unwrap().get("zone").unwrap(),
+            "us-west-2a"
+        );
+        assert_eq!(
+            pod.spec.as_ref().unwrap().termination_grace_period_seconds,
+            Some(30)
+        );
+    }
+}
