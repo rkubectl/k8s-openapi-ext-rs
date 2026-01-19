@@ -45,7 +45,6 @@ fn none_if_empty(text: &str) -> Option<String> {
 mod tests {
     use super::*;
 
-    use crate::SecretExt;
     #[test]
     fn from_secret() {
         let secret = corev1::Secret::new("NAME");

@@ -1,11 +1,17 @@
 #![cfg_attr(feature = "pedantic", warn(clippy::pedantic))]
-#![warn(clippy::use_self)]
+#![warn(clippy::cast_possible_truncation)]
+#![warn(clippy::cloned_instead_of_copied)]
+#![warn(clippy::flat_map_option)]
+#![warn(clippy::implicit_clone)]
 #![warn(clippy::map_flatten)]
 #![warn(clippy::map_unwrap_or)]
+#![warn(clippy::unused_trait_names)]
+#![warn(clippy::use_self)]
 #![warn(deprecated_in_future)]
 #![warn(future_incompatible)]
 #![warn(noop_method_call)]
 #![warn(unreachable_pub)]
+#![warn(redundant_imports)]
 #![warn(missing_debug_implementations)]
 #![warn(rust_2018_compatibility)]
 #![warn(rust_2021_compatibility)]
@@ -196,7 +202,7 @@ impl ToIntOrString for i32 {
 
 impl ToIntOrString for u64 {
     fn to_int_or_string(self) -> intstr::IntOrString {
-        intstr::IntOrString::Int(self as i32)
+        intstr::IntOrString::Int(self.try_into().unwrap_or(i32::MAX))
     }
 }
 
