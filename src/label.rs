@@ -27,3 +27,7 @@ pub const KUBERNETES_IO_METADATA_NAME: &str = "kubernetes.io/metadata.name";
 pub const CLUSTER_SERVICE: &str = "kubernetes.io/cluster-service";
 
 pub const DEFAULT_DEPLOYMENT_UNIQUE_LABEL_KEY: &str = "pod-template-hash";
+
+pub const CONTROLLER_REVISION_HASH_LABEL_KEY: &str = "controller-revision-hash";
+pub const STATEFULSET_POD_NAME_LABEL_KEY: &str = "statefulset.kubernetes.io/pod-name";
+pub const POD_INDEX_LABEL: &str = "apps.kubernetes.io/pod-index";
