@@ -30,6 +30,11 @@ pub trait StatefulSetGetExt {
         self.spec()?.min_ready_seconds
     }
 
+    /// The PodTemplateSpec used to create Pods in the StatefulSet.
+    fn template(&self) -> Option<&corev1::PodTemplateSpec> {
+        self.spec().map(|spec| &spec.template)
+    }
+
     /// Total number of available pods (ready for at least minReadySeconds) targeted by this statefulset.
     fn available_replicas(&self) -> Option<i32> {
         self.status()?.available_replicas
