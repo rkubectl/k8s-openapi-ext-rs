@@ -3,6 +3,9 @@ use super::*;
 pub trait ContainerExt: Sized {
     fn new(name: impl ToString) -> Self;
 
+    /// Add `args` to container args list
+    fn args(self, args: impl IntoIterator<Item = impl ToString>) -> Self;
+
     fn command(self, command: impl IntoIterator<Item = impl ToString>) -> Self;
 
     /// Add environment variables to the container environment list
@@ -138,6 +141,12 @@ impl ContainerExt for corev1::Container {
             // working_dir: todo!(),
             ..default()
         }
+    }
+
+    fn args(mut self, args: impl IntoIterator<Item = impl ToString>) -> Self {
+        let args = args.into_iter().map(|item| item.to_string());
+        self.args.get_or_insert_default().extend(args);
+        self
     }
 
     fn command(self, command: impl IntoIterator<Item = impl ToString>) -> Self {
