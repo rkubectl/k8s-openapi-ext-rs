@@ -11,7 +11,7 @@ impl RoleRefExt for rbacv1::RoleRef {
         let kind = T::KIND.to_string();
         Self {
             name,
-            api_group,
+            api_group: Some(api_group),
             kind,
         }
     }

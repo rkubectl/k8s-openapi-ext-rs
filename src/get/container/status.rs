@@ -67,7 +67,7 @@ pub trait ContainerStatusGetExt {
         self.waiting()?.reason.as_deref()
     }
 
-    openapi::k8s_if_ge_1_31! {
+    openapi::k8s_if_ge_1_32! {
         fn allocated_resources_status(&self) -> Option<&[corev1::ResourceStatus]> {
             self.container_status().allocated_resources_status.as_deref()
         }
