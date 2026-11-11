@@ -30,7 +30,7 @@ pub trait StatefulSetGetExt {
         self.spec()?.min_ready_seconds
     }
 
-    /// The PodTemplateSpec used to create Pods in the StatefulSet.
+    /// The `PodTemplateSpec` used to create Pods in the `StatefulSet`.
     fn template(&self) -> Option<&corev1::PodTemplateSpec> {
         self.spec().map(|spec| &spec.template)
     }
@@ -40,9 +40,9 @@ pub trait StatefulSetGetExt {
         self.status()?.available_replicas
     }
 
-    /// The count of hash collisions for the StatefulSet.
-    /// The StatefulSet controller uses this field as a collision avoidance mechanism
-    /// when it needs to create the name for the newest ControllerRevision.
+    /// The count of hash collisions for the `StatefulSet`.
+    /// The `StatefulSet` controller uses this field as a collision avoidance mechanism
+    /// when it needs to create the name for the newest `ControllerRevision`.
     fn collision_count(&self) -> Option<i32> {
         self.status()?.collision_count
     }
@@ -52,40 +52,40 @@ pub trait StatefulSetGetExt {
         self.status()?.conditions.as_deref()
     }
 
-    /// The number of Pods created by the StatefulSet controller from the StatefulSet version indicated by `current_revision`.
+    /// The number of Pods created by the `StatefulSet` controller from the `StatefulSet` version indicated by `current_revision`.
     fn current_replicas(&self) -> Option<i32> {
         self.status()?.current_replicas
     }
 
-    /// If not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [0,currentReplicas).
+    /// If not empty, indicates the version of the `StatefulSet` used to generate Pods in the sequence [0,currentReplicas).
     fn current_revision(&self) -> Option<&str> {
         self.status()?.current_revision.as_deref()
     }
 
-    /// The most recent generation observed for this StatefulSet.
+    /// The most recent generation observed for this `StatefulSet`.
     /// It corresponds to the StatefulSet’s generation, which is updated on mutation by the API Server.
     fn observed_generation(&self) -> Option<i64> {
         self.status()?.observed_generation
     }
 
-    /// The number of pods created for this StatefulSet with a Ready Condition.
+    /// The number of pods created for this `StatefulSet` with a Ready Condition.
     fn ready_replicas(&self) -> Option<i32> {
         self.status()?.ready_replicas
     }
 
-    /// The number of Pods created by the StatefulSet controller.
+    /// The number of Pods created by the `StatefulSet` controller.
     fn status_replicas(&self) -> i32 {
         self.status()
             .map(|status| status.replicas)
             .unwrap_or_default()
     }
 
-    /// If not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [replicas-updatedReplicas,replicas)
+    /// If not empty, indicates the version of the `StatefulSet` used to generate Pods in the sequence [replicas-updatedReplicas,replicas)
     fn update_revision(&self) -> Option<&str> {
         self.status()?.update_revision.as_deref()
     }
 
-    /// The number of Pods created by the StatefulSet controller from the StatefulSet version indicated by `update_revision`.
+    /// The number of Pods created by the `StatefulSet` controller from the `StatefulSet` version indicated by `update_revision`.
     fn updated_replicas(&self) -> Option<i32> {
         self.status()?.updated_replicas
     }

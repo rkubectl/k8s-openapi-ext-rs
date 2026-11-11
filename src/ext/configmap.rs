@@ -4,7 +4,7 @@ use super::*;
 /// Fluent builders and mutable accessors
 ///
 pub trait ConfigMapExt: ResourceBuilder {
-    /// Creates new `corev1::ConfigMap object with given `name`
+    /// Creates new `corev1::ConfigMap` object with given `name`
     ///
     fn new(name: impl ToString) -> Self;
 

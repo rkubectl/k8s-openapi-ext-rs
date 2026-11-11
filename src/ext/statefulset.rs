@@ -1,7 +1,7 @@
 use super::*;
 
 pub trait StatefulSetExt: super::ResourceBuilder {
-    /// Create a new StatefulSet with the given name.
+    /// Create a new `StatefulSet` with the given name.
     ///
     /// # Examples
     ///
@@ -14,7 +14,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn new(name: impl ToString) -> Self;
 
-    /// Create a new StatefulSet with the given name and labels.
+    /// Create a new `StatefulSet` with the given name and labels.
     ///
     /// # Examples
     ///
@@ -32,7 +32,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
         labels: impl IntoIterator<Item = (impl ToString, impl ToString)>,
     ) -> Self;
 
-    /// Set the spec for the StatefulSet.
+    /// Set the spec for the `StatefulSet`.
     ///
     /// # Examples
     ///
@@ -46,7 +46,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn spec(self, spec: appsv1::StatefulSetSpec) -> Self;
 
-    /// Set the number of replicas for the StatefulSet.
+    /// Set the number of replicas for the `StatefulSet`.
     ///
     /// # Examples
     ///
@@ -59,7 +59,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn replicas(self, replicas: i32) -> Self;
 
-    /// Set the minimum ready seconds for the StatefulSet.
+    /// Set the minimum ready seconds for the `StatefulSet`.
     ///
     /// Minimum number of seconds for which a newly created pod should be ready
     /// without any of its container crashing, for it to be considered available.
@@ -75,7 +75,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn min_ready_seconds(self, seconds: i32) -> Self;
 
-    /// Set the selector for the StatefulSet.
+    /// Set the selector for the `StatefulSet`.
     ///
     /// # Examples
     ///
@@ -90,7 +90,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn selector(self, selector: metav1::LabelSelector) -> Self;
 
-    /// Set the matchLabels for the StatefulSet's selector.
+    /// Set the matchLabels for the `StatefulSet`'s selector.
     ///
     /// # Examples
     ///
@@ -106,9 +106,9 @@ pub trait StatefulSetExt: super::ResourceBuilder {
         match_labels: impl IntoIterator<Item = (impl ToString, impl ToString)>,
     ) -> Self;
 
-    /// Set the service name for the StatefulSet.
+    /// Set the service name for the `StatefulSet`.
     ///
-    /// The service name is used to govern the StatefulSet and must be the name
+    /// The service name is used to govern the `StatefulSet` and must be the name
     /// of an existing headless service.
     ///
     /// # Examples
@@ -122,9 +122,9 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn service_name(self, service_name: impl ToString) -> Self;
 
-    /// Set the revision history limit for the StatefulSet.
+    /// Set the revision history limit for the `StatefulSet`.
     ///
-    /// The number of old ReplicaSets to retain to allow rollback.
+    /// The number of old `ReplicaSets` to retain to allow rollback.
     /// This is a pointer to distinguish between explicit zero and not specified.
     ///
     /// # Examples
@@ -138,7 +138,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn revision_history_limit(self, limit: i32) -> Self;
 
-    /// Set the pod template spec for the StatefulSet.
+    /// Set the pod template spec for the `StatefulSet`.
     ///
     /// # Examples
     ///
@@ -153,9 +153,9 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn template(self, template: corev1::PodTemplateSpec) -> Self;
 
-    /// Set the starting ordinal for the StatefulSet.
+    /// Set the starting ordinal for the `StatefulSet`.
     ///
-    /// Controls the starting ordinal number for the StatefulSet pods.
+    /// Controls the starting ordinal number for the `StatefulSet` pods.
     /// By default, pods start from ordinal 0.
     ///
     /// # Examples
@@ -169,9 +169,9 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn ordinals(self, ordinals: i32) -> Self;
 
-    /// Set the update strategy for the StatefulSet.
+    /// Set the update strategy for the `StatefulSet`.
     ///
-    /// Update strategy indicates the StatefulSetUpdateStrategy that will be
+    /// Update strategy indicates the `StatefulSetUpdateStrategy` that will be
     /// employed to update pods when a revision is made to the template.
     ///
     /// # Examples
@@ -186,7 +186,7 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn update_strategy(self, strategy: appsv1::StatefulSetUpdateStrategy) -> Self;
 
-    /// Set the pod management policy for the StatefulSet.
+    /// Set the pod management policy for the `StatefulSet`.
     ///
     /// Pod management policy controls how pods are created during initial scale up,
     /// replacement, or scale down operations.
@@ -202,9 +202,9 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn pod_management_policy(self, policy: impl ToString) -> Self;
 
-    /// Set the pod management policy to "OrderedReady" (default).
+    /// Set the pod management policy to `OrderedReady` (default).
     ///
-    /// In OrderedReady mode, pods are created, scaled, and deleted in order.
+    /// In `OrderedReady` mode, pods are created, scaled, and deleted in order.
     /// Each pod must be Ready before the next one is created or deleted.
     ///
     /// # Examples
@@ -235,10 +235,10 @@ pub trait StatefulSetExt: super::ResourceBuilder {
     /// ```
     fn parallel(self) -> Self;
 
-    /// Set the volume claim templates for the StatefulSet.
+    /// Set the volume claim templates for the `StatefulSet`.
     ///
-    /// VolumeClaimTemplates is a list of claims that pods are allowed to reference.
-    /// The StatefulSet controller is responsible for mapping network identities to
+    /// `VolumeClaimTemplates` is a list of claims that pods are allowed to reference.
+    /// The `StatefulSet` controller is responsible for mapping network identities to
     /// claims in a way that maintains the identity of a pod.
     ///
     /// # Examples
@@ -257,10 +257,10 @@ pub trait StatefulSetExt: super::ResourceBuilder {
         templates: impl IntoIterator<Item = corev1::PersistentVolumeClaim>,
     ) -> Self;
 
-    /// Set the persistent volume claim retention policy for the StatefulSet.
+    /// Set the persistent volume claim retention policy for the `StatefulSet`.
     ///
-    /// PersistentVolumeClaimRetentionPolicy describes the policy used for PVCs
-    /// created from the StatefulSet VolumeClaimTemplates.
+    /// `PersistentVolumeClaimRetentionPolicy` describes the policy used for PVCs
+    /// created from the `StatefulSet` `VolumeClaimTemplates`.
     ///
     /// # Examples
     ///

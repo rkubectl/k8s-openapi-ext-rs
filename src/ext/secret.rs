@@ -3,69 +3,69 @@ use base64::Engine as _;
 use super::*;
 
 pub trait SecretExt: super::ResourceBuilder + Sized {
-    /// SecretTypeOpaque is the default; arbitrary user-defined data
+    /// `SecretTypeOpaque` is the default; arbitrary user-defined data
     const SECRET_TYPE_OPAQUE: &str = "Opaque";
 
-    /// SecretTypeServiceAccountToken contains a token that identifies a service account to the API
+    /// `SecretTypeServiceAccountToken` contains a token that identifies a service account to the API
     ///
     /// Required fields:
-    /// - Secret.Annotations["kubernetes.io/service-account.name"] - the name of the ServiceAccount the token identifies
-    /// - Secret.Annotations["kubernetes.io/service-account.uid"] - the UID of the ServiceAccount the token identifies
+    /// - Secret.Annotations["kubernetes.io/service-account.name"] - the name of the `ServiceAccount` the token identifies
+    /// - Secret.Annotations["kubernetes.io/service-account.uid"] - the UID of the `ServiceAccount` the token identifies
     /// - Secret.Data["token"] - a token that identifies the service account to the API
     const SECRET_TYPE_SERVICE_ACCOUNT_TOKEN: &str = "kubernetes.io/service-account-token";
 
-    /// ServiceAccountNameKey is the key of the required annotation for SecretTypeServiceAccountToken secrets
+    /// `ServiceAccountNameKey` is the key of the required annotation for `SecretTypeServiceAccountToken` secrets
     const SERVICE_ACCOUNT_NAME_KEY: &str = "kubernetes.io/service-account.name";
-    /// ServiceAccountUIDKey is the key of the required annotation for SecretTypeServiceAccountToken secrets
+    /// `ServiceAccountUIDKey` is the key of the required annotation for `SecretTypeServiceAccountToken` secrets
     const SERVICE_ACCOUNT_UID_KEY: &str = "kubernetes.io/service-account.uid";
-    /// ServiceAccountTokenKey is the key of the required data for SecretTypeServiceAccountToken secrets
+    /// `ServiceAccountTokenKey` is the key of the required data for `SecretTypeServiceAccountToken` secrets
     const SERVICE_ACCOUNT_TOKEN_KEY: &str = "token";
-    /// ServiceAccountKubeconfigKey is the key of the optional kubeconfig data for SecretTypeServiceAccountToken secrets
+    /// `ServiceAccountKubeconfigKey` is the key of the optional kubeconfig data for `SecretTypeServiceAccountToken` secrets
     const SERVICE_ACCOUNT_KUBECONFIG_KEY: &str = "kubernetes.kubeconfig";
-    /// ServiceAccountRootCAKey is the key of the optional root certificate authority for SecretTypeServiceAccountToken secrets
+    /// `ServiceAccountRootCAKey` is the key of the optional root certificate authority for `SecretTypeServiceAccountToken` secrets
     const SERVICE_ACCOUNT_ROOTCA_KEY: &str = "ca.crt";
-    /// ServiceAccountNamespaceKey is the key of the optional namespace to use as the default for namespaced API calls
+    /// `ServiceAccountNamespaceKey` is the key of the optional namespace to use as the default for namespaced API calls
     const SERVICE_ACCOUNT_NAMESPACE_KEY: &str = "namespace";
 
-    /// SecretTypeDockercfg contains a dockercfg file that follows the same format rules as ~/.dockercfg
+    /// `SecretTypeDockercfg` contains a dockercfg file that follows the same format rules as ~/.dockercfg
     ///
     /// Required fields:
     /// - Secret.Data[".dockercfg"] - a serialized ~/.dockercfg file
     const SECRET_TYPE_DOCKERCFG: &str = "kubernetes.io/dockercfg";
 
-    /// DockerConfigKey is the key of the required data for SecretTypeDockercfg secrets
+    /// `DockerConfigKey` is the key of the required data for `SecretTypeDockercfg` secrets
     const DOCKER_CONFIG_KEY: &str = ".dockercfg";
 
-    /// SecretTypeDockerConfigJSON contains a dockercfg file that follows the same format rules as ~/.docker/config.json
+    /// `SecretTypeDockerConfigJSON` contains a dockercfg file that follows the same format rules as ~/.docker/config.json
     ///
     /// Required fields:
     /// - Secret.Data[".dockerconfigjson"] - a serialized ~/.docker/config.json file
     const SECRET_TYPE_DOCKER_CONFIG_JSON: &str = "kubernetes.io/dockerconfigjson";
-    /// DockerConfigJSONKey is the key of the required data for SecretTypeDockerConfigJson secrets
+    /// `DockerConfigJSONKey` is the key of the required data for `SecretTypeDockerConfigJson` secrets
     const DOCKER_CONFIG_JSON_KEY: &str = ".dockerconfigjson";
 
-    /// SecretTypeBasicAuth contains data needed for basic authentication.
+    /// `SecretTypeBasicAuth` contains data needed for basic authentication.
     ///
     /// Required at least one of fields:
     /// - Secret.Data["username"] - username used for authentication
     /// - Secret.Data["password"] - password or token needed for authentication
     const SECRET_TYPE_BASIC_AUTH: &str = "kubernetes.io/basic-auth";
 
-    /// BasicAuthUsernameKey is the key of the username for SecretTypeBasicAuth secrets
+    /// `BasicAuthUsernameKey` is the key of the username for `SecretTypeBasicAuth` secrets
     const BASIC_AUTH_USERNAME_KEY: &str = "username";
-    /// BasicAuthPasswordKey is the key of the password or token for SecretTypeBasicAuth secrets
+    /// `BasicAuthPasswordKey` is the key of the password or token for `SecretTypeBasicAuth` secrets
     const BASIC_AUTH_PASSWORD_KEY: &str = "password";
 
-    /// SecretTypeSSHAuth contains data needed for SSH authentication.
+    /// `SecretTypeSSHAuth` contains data needed for SSH authentication.
     ///
     /// Required field:
     /// - Secret.Data["ssh-privatekey"] - private SSH key needed for authentication
     const SECRET_TYPE_SSH_AUTH: &str = "kubernetes.io/ssh-auth";
 
-    /// SSHAuthPrivateKey is the key of the required SSH private key for SecretTypeSSHAuth secrets
+    /// `SSHAuthPrivateKey` is the key of the required SSH private key for `SecretTypeSSHAuth` secrets
     const SSH_AUTH_PRIVATE_KEY: &str = "ssh-privatekey";
 
-    /// SecretTypeTLS contains information about a TLS client or server secret. It
+    /// `SecretTypeTLS` contains information about a TLS client or server secret. It
     /// is primarily used with TLS termination of the Ingress resource, but may be
     /// used in other types.
     ///
@@ -74,14 +74,14 @@ pub trait SecretExt: super::ResourceBuilder + Sized {
     ///   Secret.Data["tls.crt"] - TLS certificate.
     const SECRET_TYPE_TLS: &str = "kubernetes.io/tls";
 
-    /// TLSCertKey is the key for tls certificates in a TLS secret.
+    /// `TLSCertKey` is the key for tls certificates in a TLS secret.
     const TLS_CERT_KEY: &str = "tls.crt";
-    /// TLSPrivateKeyKey is the key for the private key field in a TLS secret.
+    /// `TLSPrivateKeyKey` is the key for the private key field in a TLS secret.
     const TLS_PRIVATE_KEY_KEY: &str = "tls.key";
 
-    /// SecretTypeBootstrapToken is used during the automated bootstrap process (first
+    /// `SecretTypeBootstrapToken` is used during the automated bootstrap process (first
     /// implemented by kubeadm). It stores tokens that are used to sign well known
-    /// ConfigMaps. They are used for authn.
+    /// `ConfigMaps`. They are used for authn.
     const SECRET_TYPE_BOOTSTRAP_TOKEN: &str = "bootstrap.kubernetes.io/token";
 
     /// Creates new empty `corev1::Secret` object

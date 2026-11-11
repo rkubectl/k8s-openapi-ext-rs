@@ -4,7 +4,7 @@ use super::*;
 /// Fluent builders and mutable accessors
 ///
 pub trait NodeExt: ResourceBuilder {
-    /// Creates new `corev1::Node object with given `name`
+    /// Creates new `corev1::Node` object with given `name`
     ///
     fn new(name: impl ToString) -> Self;
 

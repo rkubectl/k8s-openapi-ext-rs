@@ -11,7 +11,7 @@ pub trait EnvVarExt {
     // metadata.labels\['\<KEY\>'\], metadata.annotations\['\<KEY\>'\],
     /// Set an env var `name` that points to the node which this pod was requested to scheduled on
     fn spec_nodename(name: impl ToString) -> Self;
-    /// Set an env var `name` that points to the requested ServiceAccountName for this pod
+    /// Set an env var `name` that points to the requested `ServiceAccountName` for this pod
     fn spec_service_account_name(name: impl ToString) -> Self;
     fn status_host_ip(name: impl ToString) -> Self;
     fn status_pod_ip(name: impl ToString) -> Self;

@@ -10,7 +10,7 @@ pub trait ProbeExt {
     /// HTTP get probe
     fn http_get(path: impl AsRef<Path>, port: impl ToIntOrString) -> Self;
 
-    /// TCPSocket specifies an action involving a TCP port. TCP hooks not yet supported
+    /// `TCPSocket` specifies an action involving a TCP port. TCP hooks not yet supported
     fn tcp_socket(port: impl ToIntOrString) -> Self;
 
     /// gRPC probe
