@@ -90,8 +90,8 @@ pub trait PodSpecExt {
 
     /// Set `service_account` (deprecated)
     ///
-    /// **Deprecated:** Use [`service_account_name`] instead.
-    #[deprecated(note = "Use service_account_name instead")]
+    /// **Deprecated:** Use `service_account_name` instead.
+    #[deprecated(note = "Use \"service_account_name\" instead")]
     fn service_account(self, name: impl ToString) -> Self;
 
     /// Set `set_hostname_as_fqdn`
