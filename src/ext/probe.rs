@@ -107,7 +107,11 @@ impl ProbeExt for corev1::Probe {
 
     fn grpc<'a>(port: i32, service: impl Into<Option<&'a str>>) -> Self {
         let service = service.into().map(|service| service.to_string());
-        let grpc = Some(corev1::GRPCAction { port, service });
+        let grpc = Some(corev1::GRPCAction {
+            port,
+            service,
+            ..default()
+        });
         Self {
             grpc,
             // exec: todo!(),

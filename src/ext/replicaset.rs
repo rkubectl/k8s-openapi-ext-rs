@@ -44,10 +44,7 @@ impl ReplicaSetExt for appsv1::ReplicaSet {
     }
 
     fn spec(self, spec: appsv1::ReplicaSetSpec) -> Self {
-        Self {
-            spec: Some(spec),
-            ..self
-        }
+        Self { spec, ..self }
     }
 
     fn min_ready_seconds(mut self, seconds: i32) -> Self {
@@ -92,6 +89,6 @@ impl HasSpec for appsv1::ReplicaSet {
     type Spec = appsv1::ReplicaSetSpec;
 
     fn spec_mut(&mut self) -> &mut Self::Spec {
-        self.spec.get_or_insert_default()
+        &mut self.spec
     }
 }

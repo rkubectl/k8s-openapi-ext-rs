@@ -1,42 +1,42 @@
 use super::*;
 
 pub trait DeploymentGetExt {
-    fn spec(&self) -> Option<&appsv1::DeploymentSpec>;
+    fn spec(&self) -> &appsv1::DeploymentSpec;
 
     fn status(&self) -> Option<&appsv1::DeploymentStatus>;
 
     // From spec
 
     fn min_ready_seconds(&self) -> Option<i32> {
-        self.spec()?.min_ready_seconds
+        self.spec().min_ready_seconds
     }
 
     fn paused(&self) -> Option<bool> {
-        self.spec()?.paused
+        self.spec().paused
     }
 
     fn progress_deadline_seconds(&self) -> Option<i32> {
-        self.spec()?.progress_deadline_seconds
+        self.spec().progress_deadline_seconds
     }
 
     fn revision_history_limit(&self) -> Option<i32> {
-        self.spec()?.revision_history_limit
+        self.spec().revision_history_limit
     }
 
-    fn selector(&self) -> Option<&metav1::LabelSelector> {
-        self.spec().map(|spec| &spec.selector)
+    fn selector(&self) -> &metav1::LabelSelector {
+        &self.spec().selector
     }
 
     fn strategy(&self) -> Option<&appsv1::DeploymentStrategy> {
-        self.spec()?.strategy.as_ref()
+        self.spec().strategy.as_ref()
     }
 
-    fn template(&self) -> Option<&corev1::PodTemplateSpec> {
-        self.spec().map(|spec| &spec.template)
+    fn template(&self) -> &corev1::PodTemplateSpec {
+        &self.spec().template
     }
 
     fn spec_replicas(&self) -> Option<i32> {
-        self.spec()?.replicas
+        self.spec().replicas
     }
 
     // From status
@@ -74,7 +74,7 @@ pub trait DeploymentGetExt {
 
     // Shortcuts
     fn containers(&self) -> Option<&[corev1::Container]> {
-        self.template()?.containers()
+        self.template().containers()
     }
 
     fn port_by_name(&self, name: impl AsRef<str>) -> Option<&corev1::ContainerPort> {
@@ -86,8 +86,8 @@ pub trait DeploymentGetExt {
 }
 
 impl DeploymentGetExt for appsv1::Deployment {
-    fn spec(&self) -> Option<&appsv1::DeploymentSpec> {
-        self.spec.as_ref()
+    fn spec(&self) -> &appsv1::DeploymentSpec {
+        &self.spec
     }
 
     fn status(&self) -> Option<&appsv1::DeploymentStatus> {
@@ -96,8 +96,8 @@ impl DeploymentGetExt for appsv1::Deployment {
 }
 
 impl DeploymentGetExt for appsv1::DeploymentSpec {
-    fn spec(&self) -> Option<&appsv1::DeploymentSpec> {
-        Some(self)
+    fn spec(&self) -> &appsv1::DeploymentSpec {
+        self
     }
 
     fn status(&self) -> Option<&appsv1::DeploymentStatus> {
@@ -106,11 +106,28 @@ impl DeploymentGetExt for appsv1::DeploymentSpec {
 }
 
 impl DeploymentGetExt for appsv1::DeploymentStatus {
-    fn spec(&self) -> Option<&appsv1::DeploymentSpec> {
-        None
+    fn spec(&self) -> &appsv1::DeploymentSpec {
+        &EMPTY_DEPLOYMENT_SPEC
     }
 
     fn status(&self) -> Option<&appsv1::DeploymentStatus> {
         Some(self)
     }
 }
+
+static EMPTY_DEPLOYMENT_SPEC: appsv1::DeploymentSpec = appsv1::DeploymentSpec {
+    min_ready_seconds: None,
+    paused: None,
+    progress_deadline_seconds: None,
+    replicas: None,
+    revision_history_limit: None,
+    selector: metav1::LabelSelector {
+        match_expressions: None,
+        match_labels: None,
+    },
+    strategy: None,
+    template: corev1::PodTemplateSpec {
+        metadata: None,
+        spec: None,
+    },
+};

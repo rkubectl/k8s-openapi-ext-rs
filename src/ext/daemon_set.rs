@@ -46,10 +46,7 @@ impl DaemonSetExt for appsv1::DaemonSet {
     }
 
     fn spec(self, spec: appsv1::DaemonSetSpec) -> Self {
-        Self {
-            spec: Some(spec),
-            ..self
-        }
+        Self { spec, ..self }
     }
 
     fn min_ready_seconds(mut self, seconds: i32) -> Self {
@@ -95,6 +92,6 @@ impl HasSpec for appsv1::DaemonSet {
     type Spec = appsv1::DaemonSetSpec;
 
     fn spec_mut(&mut self) -> &mut Self::Spec {
-        self.spec.get_or_insert_default()
+        &mut self.spec
     }
 }

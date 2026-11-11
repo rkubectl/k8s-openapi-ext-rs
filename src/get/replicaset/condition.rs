@@ -15,12 +15,12 @@ pub trait ReplicaSetConditionGetExt {
         self.myself().reason.as_deref()
     }
 
-    fn status(&self) -> &str {
-        &self.myself().status
+    fn status(&self) -> Option<&str> {
+        self.myself().status.as_deref()
     }
 
-    fn r#type(&self) -> &str {
-        &self.myself().type_
+    fn r#type(&self) -> Option<&str> {
+        self.myself().type_.as_deref()
     }
 }
 

@@ -5,23 +5,23 @@ pub use condition::ReplicaSetConditionGetExt;
 mod condition;
 
 pub trait ReplicaSetGetExt {
-    fn spec(&self) -> Option<&appsv1::ReplicaSetSpec>;
+    fn spec(&self) -> &appsv1::ReplicaSetSpec;
     fn status(&self) -> Option<&appsv1::ReplicaSetStatus>;
 
     fn min_ready_seconds(&self) -> Option<i32> {
-        self.spec()?.min_ready_seconds
+        self.spec().min_ready_seconds
     }
 
     fn spec_replicas(&self) -> Option<i32> {
-        self.spec()?.replicas
+        self.spec().replicas
     }
 
-    fn selector(&self) -> Option<&metav1::LabelSelector> {
-        self.spec().map(|spec| &spec.selector)
+    fn selector(&self) -> &metav1::LabelSelector {
+        &self.spec().selector
     }
 
     fn template(&self) -> Option<&corev1::PodTemplateSpec> {
-        self.spec()?.template.as_ref()
+        self.spec().template.as_ref()
     }
 
     fn available_replicas(&self) -> Option<i32> {
@@ -49,8 +49,8 @@ pub trait ReplicaSetGetExt {
 }
 
 impl ReplicaSetGetExt for appsv1::ReplicaSet {
-    fn spec(&self) -> Option<&appsv1::ReplicaSetSpec> {
-        self.spec.as_ref()
+    fn spec(&self) -> &appsv1::ReplicaSetSpec {
+        &self.spec
     }
 
     fn status(&self) -> Option<&appsv1::ReplicaSetStatus> {

@@ -297,10 +297,7 @@ impl StatefulSetExt for appsv1::StatefulSet {
     }
 
     fn spec(self, spec: appsv1::StatefulSetSpec) -> Self {
-        Self {
-            spec: Some(spec),
-            ..self
-        }
+        Self { spec, ..self }
     }
 
     fn replicas(mut self, replicas: i32) -> Self {
@@ -390,6 +387,6 @@ impl HasSpec for appsv1::StatefulSet {
     type Spec = appsv1::StatefulSetSpec;
 
     fn spec_mut(&mut self) -> &mut Self::Spec {
-        self.spec.get_or_insert_default()
+        &mut self.spec
     }
 }

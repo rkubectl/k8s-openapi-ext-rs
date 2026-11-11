@@ -1,38 +1,38 @@
 use super::*;
 
 pub trait StatefulSetGetExt {
-    fn spec(&self) -> Option<&appsv1::StatefulSetSpec>;
+    fn spec(&self) -> &appsv1::StatefulSetSpec;
 
     fn status(&self) -> Option<&appsv1::StatefulSetStatus>;
 
     // From spec
     fn ordinals(&self) -> Option<i32> {
-        self.spec()?.ordinals.as_ref()?.start
+        self.spec().ordinals.as_ref()?.start
     }
 
     fn pod_management_policy(&self) -> Option<&str> {
-        self.spec()?.pod_management_policy.as_deref()
+        self.spec().pod_management_policy.as_deref()
     }
 
     fn revision_history_limit(&self) -> Option<i32> {
-        self.spec()?.revision_history_limit
+        self.spec().revision_history_limit
     }
 
     fn service_name(&self) -> Option<&str> {
-        self.spec()?.service_name.as_deref()
+        self.spec().service_name.as_deref()
     }
 
     fn spec_replicas(&self) -> Option<i32> {
-        self.spec()?.replicas
+        self.spec().replicas
     }
 
     fn min_ready_seconds(&self) -> Option<i32> {
-        self.spec()?.min_ready_seconds
+        self.spec().min_ready_seconds
     }
 
     /// The `PodTemplateSpec` used to create Pods in the `StatefulSet`.
-    fn template(&self) -> Option<&corev1::PodTemplateSpec> {
-        self.spec().map(|spec| &spec.template)
+    fn template(&self) -> &corev1::PodTemplateSpec {
+        &self.spec().template
     }
 
     /// Total number of available pods (ready for at least minReadySeconds) targeted by this statefulset.
@@ -92,8 +92,8 @@ pub trait StatefulSetGetExt {
 }
 
 impl StatefulSetGetExt for appsv1::StatefulSet {
-    fn spec(&self) -> Option<&appsv1::StatefulSetSpec> {
-        self.spec.as_ref()
+    fn spec(&self) -> &appsv1::StatefulSetSpec {
+        &self.spec
     }
 
     fn status(&self) -> Option<&appsv1::StatefulSetStatus> {

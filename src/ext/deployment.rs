@@ -100,6 +100,6 @@ impl HasSpec for appsv1::Deployment {
     type Spec = appsv1::DeploymentSpec;
 
     fn spec_mut(&mut self) -> &mut Self::Spec {
-        self.spec.get_or_insert_default()
+        &mut self.spec
     }
 }
