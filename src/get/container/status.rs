@@ -67,17 +67,17 @@ pub trait ContainerStatusGetExt {
         self.waiting()?.reason.as_deref()
     }
 
-    openapi::k8s_if_ge_1_31! {
-        fn allocated_resources_status(&self) -> Option<&[corev1::ResourceStatus]> {
-            self.container_status().allocated_resources_status.as_deref()
-        }
-        fn user(&self) -> Option<&corev1::ContainerUser> {
-            self.container_status().user.as_ref()
-        }
+    fn allocated_resources_status(&self) -> Option<&[corev1::ResourceStatus]> {
+        self.container_status()
+            .allocated_resources_status
+            .as_deref()
+    }
+    fn user(&self) -> Option<&corev1::ContainerUser> {
+        self.container_status().user.as_ref()
+    }
 
-        fn volume_mounts(&self) -> Option<&[corev1::VolumeMountStatus]> {
-            self.container_status().volume_mounts.as_deref()
-        }
+    fn volume_mounts(&self) -> Option<&[corev1::VolumeMountStatus]> {
+        self.container_status().volume_mounts.as_deref()
     }
 }
 

@@ -59,6 +59,6 @@ impl HasSpec for batchv1::CronJob {
     type Spec = batchv1::CronJobSpec;
 
     fn spec_mut(&mut self) -> &mut Self::Spec {
-        self.spec.get_or_insert_default()
+        &mut self.spec
     }
 }
